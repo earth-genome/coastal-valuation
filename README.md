@@ -11,9 +11,9 @@ The proposed workflow follows:
 - Fork the repository.
 - Download and install the [Google App Engine SDK for Python](https://cloud.google.com/appengine/downloads).  This will include the [Python Development Server](https://cloud.google.com/appengine/docs/python/tools/devserver), launched using the `dev_appserver.py` script (which will be appropriately placed on your Path during install).
 - Edit the code, add features, add tests, whatever.  Test the service locally by running `dev_appserver.py .` from within the `coastal-valuation` directory (at the same level as `app.yaml`).  The default local server will run at `localhost:8080`.  So, for example, navigate to
-```bash
-http://localhost:8080/?address=3817 Williams Lane&city=Chevy Chase&state=MD&zip=20815
-```
+
+[`http://localhost:8080/?address=3817 Williams Lane&city=Chevy Chase&state=MD&zip=20815`](http://localhost:8080/?address=3817%20Williams%20Lane&city=Chevy%20Chase&state=MD&zip=20815)
+
 ```json
 {
     "response": {
@@ -22,7 +22,7 @@ http://localhost:8080/?address=3817 Williams Lane&city=Chevy Chase&state=MD&zip=
     }
 }
 ```
-- Submit a pull request.  The repo administrators will test the new service, run it against our [TravisCI](https://travis-ci.org/) tests. If it passes muster, the administrators will push directly to App Engines production servers.    The command to push to App Engine follows.
+- Submit a pull request.  The repo administrators will test the new service, run it against our [TravisCI](https://travis-ci.org/) tests. If it passes muster, the administrators will push directly to App Engines production servers.  The command to push to App Engine follows.
 
 ```bash
 appcfg.py update --oauth2 .
