@@ -12,13 +12,19 @@ The proposed workflow follows:
 - Download and install the [Google App Engine SDK for Python](https://cloud.google.com/appengine/downloads).  This will include the [Python Development Server](https://cloud.google.com/appengine/docs/python/tools/devserver), launched using the `dev_appserver.py` script (which will be appropriately placed on your Path during install).
 - Edit the code, add features, add tests, whatever.  Test the service locally by running `dev_appserver.py .` from within the `coastal-valuation` directory (at the same level as `app.yaml`).  The default local server will run at `localhost:8080`.  So, for example, navigate to
 
-[`http://localhost:8080/?address=3817 Williams Lane&city=Chevy Chase&state=MD&zip=20815`](http://localhost:8080/?address=3817%20Williams%20Lane&city=Chevy%20Chase&state=MD&zip=20815)
+[`http://localhost:8080/?address=400%20Balboa%20Blvd&city=Half%20Moon%20Bay&state=CA&zip=94019`](http://localhost:8080/?address=3817%20Williams%20Lane&city=Chevy%20Chase&state=MD&zip=20815)
 
 ```json
 {
     "response": {
-        "lon": -77.07507926399995,
-        "lat": 38.98386471900017
+        "coords": {
+            "lat": 37.46873300000016,
+            "lon": -122.44418899999994
+        },
+        "flood": true
+    },
+    "meta": {
+        "reference": "test"
     }
 }
 ```
