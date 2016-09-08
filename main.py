@@ -29,6 +29,7 @@ def geocode(address, city, state, zipcode):
 
     lon = float(soup.find('longitude').contents[0])
     lat = float(soup.find('latitude').contents[0])
+    valuation = int(soup.find('zestimate').find('amount').contents[0])
 
     # Spatial query
     carto_base = 'https://danhammergenome.cartodb.com/api/v2/sql'
@@ -58,10 +59,11 @@ def geocode(address, city, state, zipcode):
                 'lat': lat,
                 'lon': lon
             },
-            'flood': res
+            'flood': res,
+            'value': valuation
         },
         'meta': {
-            'reference': lon
+            'reference': valuation
         }
     }
 
