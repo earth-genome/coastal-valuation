@@ -1,5 +1,9 @@
 import json
 import urllib
+import sys
+sys.path.insert(0, 'libs')
+
+from bs4 import BeautifulSoup
 from google.appengine.api import urlfetch
 
 
@@ -10,24 +14,21 @@ def geocode(address, city, state, zipcode):
     Half Moon Bay, CA 94019
 
     """
-
-    # Geocode address
-    base = 'http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/'
-    d = 'Locators/ESRI_Geocode_USA/GeocodeServer/findAddressCandidates'
-
-    payload = {
-        'Address': address,
-        'City': city,
-        'State': state,
-        'Zip': zipcode,
-        'f': 'json'
+    # Check zestimate, Earth Genome Developer API key
+    zillow_base = 'http://www.zillow.com/webservice/GetSearchResults.htm'
+    zillow_payload = {
+        'zws-id': 'X1-ZWz19l1vnzxtzf_ac8os',
+        'address': address.replace(" ", "+"),
+        'citystatezip': '+'.join([city, state, zipcode]),
+        'zestimate': 'true'
     }
 
-    url = base + d + '?' + urllib.urlencode(payload)
-    data = json.loads(urlfetch.fetch(url=url).content)
-    coords = data['candidates'][0]['location']
-    lat = coords['y']
-    lon = coords['x']
+    zillow_url = zillow_base + '?' + urllib.urlencode(zillow_payload)
+    zillow_data = urlfetch.fetch(url=zillow_url).content
+    soup = BeautifulSoup(zillow_data)
+
+    lon = float(soup.find('longitude').contents[0])
+    lat = float(soup.find('latitude').contents[0])
 
     # Spatial query
     carto_base = 'https://danhammergenome.cartodb.com/api/v2/sql'
@@ -60,7 +61,7 @@ def geocode(address, city, state, zipcode):
             'flood': res
         },
         'meta': {
-            'reference': 'test'
+            'reference': lon
         }
     }
 
