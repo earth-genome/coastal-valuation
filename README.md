@@ -18,10 +18,11 @@ The proposed workflow follows:
 {
     "response": {
         "coords": {
-            "lat": 37.46873300000016,
-            "lon": -122.44418899999994
+            "lat": 37.46873,
+            "lon": -122.4442
         },
-        "flood": true
+        "flood": true,
+        "value": 1578805
     },
     "meta": {
         "reference": "test"
