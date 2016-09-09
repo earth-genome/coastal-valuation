@@ -1,6 +1,6 @@
 import json
 import webapp2
-from main import geocode
+from main import discount_value
 
 
 class AddressHandler(webapp2.RequestHandler):
@@ -17,7 +17,7 @@ class AddressHandler(webapp2.RequestHandler):
         zipcode = self.request.get('zip')
 
         # response
-        res = geocode(address, city, state, zipcode)
+        res = discount_value(address, city, state, zipcode)
         self.response.write(json.dumps(res))
 
 

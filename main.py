@@ -1,18 +1,17 @@
+import sys
 import json
 import urllib
-import sys
-sys.path.insert(0, 'libs')
-
-from bs4 import BeautifulSoup
+import finance
 from google.appengine.api import urlfetch
 
+# Load local libraries
+sys.path.insert(0, 'libs')
+from bs4 import BeautifulSoup
 
-def geocode(address, city, state, zipcode):
+
+def discount_value(address, city, state, zipcode):
     """
-
-    400 Balboa Blvd,
-    Half Moon Bay, CA 94019
-
+    Discount the value based on going under water
     """
     # Check zestimate, Earth Genome Developer API key
     zillow_base = 'http://www.zillow.com/webservice/GetSearchResults.htm'
@@ -31,7 +30,7 @@ def geocode(address, city, state, zipcode):
     lat = float(soup.find('latitude').contents[0])
     valuation = int(soup.find('zestimate').find('amount').contents[0])
 
-    # Spatial query
+    # Spatial query to extract flood zones
     carto_base = 'https://danhammergenome.cartodb.com/api/v2/sql'
 
     sql = [
@@ -46,12 +45,15 @@ def geocode(address, city, state, zipcode):
 
     carto_url = carto_base + '?' + urllib.urlencode(sql_payload)
     flood_data = json.loads(urlfetch.fetch(url=carto_url).content)
+    T = 35
 
     # check if list is empty
     if not flood_data['rows']:
         res = False
+        flood_valuation = valuation
     else:
         res = True
+        flood_valuation = valuation * finance.discount(T)
 
     return {
         'response': {
@@ -60,10 +62,9 @@ def geocode(address, city, state, zipcode):
                 'lon': lon
             },
             'flood': res,
-            'value': valuation
+            'value': finance.moneyfmt(str(flood_valuation), curr='$')
         },
         'meta': {
-            'reference': valuation
+            'reference': finance.moneyfmt(str(valuation), curr='$')
         }
     }
-

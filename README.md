@@ -22,10 +22,10 @@ The proposed workflow follows:
             "lon": -122.4442
         },
         "flood": true,
-        "value": 1578805
+        "value": "$1,286,743.13"
     },
     "meta": {
-        "reference": "test"
+        "reference": "$1,571,672.00"
     }
 }
 ```
