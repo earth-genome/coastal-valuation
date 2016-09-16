@@ -24,7 +24,7 @@ def discount_value(address, city, state, zipcode):
 
     zillow_url = zillow_base + '?' + urllib.urlencode(zillow_payload)
     zillow_data = urlfetch.fetch(url=zillow_url).content
-    soup = BeautifulSoup(zillow_data)
+    soup = BeautifulSoup(zillow_data, "html.parser")
 
     lon = float(soup.find('longitude').contents[0])
     lat = float(soup.find('latitude').contents[0])
