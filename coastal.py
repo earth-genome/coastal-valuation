@@ -1,5 +1,6 @@
 import json
 import urllib
+import config
 from google.appengine.api import urlfetch
 
 
@@ -22,9 +23,8 @@ def slr_depth(lat, lon):
         https://coast.noaa.gov/slr
 
     """
-    base_server = 'http://earthgenomevm.cloudapp.net:6080/'
     img_server = 'arcgis/rest/services/SLR_Depth_6ft/ImageServer/identify'
-    url_base = base_server + img_server
+    url_base = config.urls['eg_arcserver'] + img_server
 
     # filter out unnecessary images with the `mosaicRule` field-value pair
     # (i.e., there are many unneccesary images on Arc Image Servers that start

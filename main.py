@@ -2,6 +2,7 @@ import sys
 import urllib
 import finance
 import coastal
+import config
 from google.appengine.api import urlfetch
 
 # Load local libraries
@@ -14,9 +15,9 @@ def discount_value(address, city, state, zipcode):
     Discount the value based on going under water
     """
     # Check zestimate, Earth Genome Developer API key
-    zillow_base = 'http://www.zillow.com/webservice/GetSearchResults.htm'
+    zillow_base = config.urls['zillow_search']
     zillow_payload = {
-        'zws-id': 'X1-ZWz19l1vnzxtzf_ac8os',
+        'zws-id': config.keys['zillow'],
         'address': address.replace(" ", "+"),
         'citystatezip': '+'.join([city, state, zipcode]),
         'zestimate': 'true'
