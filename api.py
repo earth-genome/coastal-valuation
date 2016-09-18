@@ -1,6 +1,6 @@
 import json
 import webapp2
-from main import discount_value, discount_rate
+from main import discount_value
 
 
 class AddressHandler(webapp2.RequestHandler):
