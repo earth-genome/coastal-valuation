@@ -21,8 +21,26 @@ class AddressHandler(webapp2.RequestHandler):
         self.response.write(json.dumps(res))
 
 
+class DocsHandler(webapp2.RequestHandler):
+    def get(self):
+
+        # headers
+        self.response.headers.add_header("Access-Control-Allow-Origin", "*")
+        self.response.headers['Content-Type'] = 'application/json'
+
+        # response
+        res = {
+            'service owner': 'Earth Genome',
+            'sources': {
+                'sea level rise': 'NOAA'
+            }
+        }
+        self.response.write(json.dumps(res))
+
+
 handlers = webapp2.WSGIApplication(
     [
-        ('/', AddressHandler)
+        ('/address', AddressHandler),
+        ('/', DocsHandler)
     ], debug=True
 )

@@ -2,6 +2,7 @@ import sys
 import json
 import urllib
 import finance
+import coastal
 from google.appengine.api import urlfetch
 
 # Load local libraries
@@ -31,29 +32,11 @@ def discount_value(address, city, state, zipcode):
     valuation = int(soup.find('zestimate').find('amount').contents[0])
 
     # Spatial query to extract flood zones
-    carto_base = 'https://danhammergenome.cartodb.com/api/v2/sql'
-
-    sql = [
-        'SELECT county ',
-        'FROM ca_coast_yr2000_flood ',
-        'WHERE ST_Intersects(',
-            'the_geom::geography,',
-            'CDB_LatLng(%s, %s)::geography' % (lat, lon),
-        ')'
-    ]
-    sql_payload = {'q': ''.join(sql)}
-
-    carto_url = carto_base + '?' + urllib.urlencode(sql_payload)
-    flood_data = json.loads(urlfetch.fetch(url=carto_url).content)
-    T = 35
-
-    # check if list is empty
-    if not flood_data['rows']:
-        res = False
-        flood_valuation = valuation
+    depth = coastal.slr_depth(lat, lon)
+    if depth:
+        new_value = 0.89 * valuation
     else:
-        res = True
-        flood_valuation = valuation * finance.discount(T)
+        new_value = valuation
 
     return {
         'response': {
@@ -61,10 +44,10 @@ def discount_value(address, city, state, zipcode):
                 'lat': lat,
                 'lon': lon
             },
-            'flood': res,
-            'value': finance.moneyfmt(str(flood_valuation), curr='$')
+            'flood': depth,
+            'value': finance.moneyfmt(new_value)
         },
         'meta': {
-            'reference': finance.moneyfmt(str(valuation), curr='$')
+            'reference': finance.moneyfmt(valuation)
         }
     }
