@@ -28,26 +28,12 @@ class DocsHandler(webapp2.RequestHandler):
         self.response.headers.add_header("Access-Control-Allow-Origin", "*")
         self.response.headers['Content-Type'] = 'application/json'
 
+        # load json file
+        with open('docs.json') as docs:
+            data = json.load(docs)
+
         # response
-        res = {
-            'service owner': 'Earth Genome',
-            'objective': 'Provide the risk-adjusted value of coastal housing when incorporating projected sea level rise as a result of climate change',
-            'sources': {
-                'sea level rise': {
-                    'author': 'NOAA',
-                    'reference': 'https://coast.noaa.gov/data/digitalcoast/pdf/slr-faq.pdf'
-                },
-                'housing value': {
-                    'author': 'Zillow',
-                    'reference': 'http://www.zillow.com/zestimate'
-                },
-                'climate projections': {
-                    'author': 'IPCC',
-                    'reference': 'http://www.ipcc.ch/pdf/assessment-report/ar4/wg1/ar4-wg1-spm.pdf'
-                }
-            }
-        }
-        self.response.write(json.dumps(res))
+        self.response.write(json.dumps(data))
 
 
 handlers = webapp2.WSGIApplication(
