@@ -12,23 +12,24 @@ The proposed workflow follows:
 - Download and install the [Google App Engine SDK for Python](https://cloud.google.com/appengine/downloads).  This will include the [Python Development Server](https://cloud.google.com/appengine/docs/python/tools/devserver), launched using the `dev_appserver.py` script (which will be appropriately placed on your Path during install).
 - Edit the code, add features, add tests, whatever.  Test the service locally by running `dev_appserver.py .` from within the `coastal-valuation` directory (at the same level as `app.yaml`).  The default local server will run at `localhost:8080`.  So, for example, navigate to
 
-[`http://localhost:8080/?address=400%20Balboa%20Blvd&city=Half%20Moon%20Bay&state=CA&zip=94019`](http://localhost:8080/?address=3817%20Williams%20Lane&city=Chevy%20Chase&state=MD&zip=20815)
+[`http://localhost:8080/address?address=275 Beresford Creek Street&city=Daniel Island&state=SC&zip=29492`](http://localhost:8080/address?address=275%20Beresford%20Creek%20Street&city=Daniel%20Island&state=SC&zip=29492)
 
 ```json
 {
     "response": {
         "coords": {
-            "lat": 37.46873,
-            "lon": -122.4442
+            "lat": 32.862305,
+            "lon": -79.919835
         },
-        "flood": true,
-        "value": "$1,286,743.13"
+        "innundation": 0.385538
     },
     "meta": {
-        "reference": "$1,571,672.00"
+        "reference": "$695,503.00"
     }
 }
 ```
+- Ensure that you have a JSON viewer browser extension, like [**this one**](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en).
+
 - Submit a pull request.  The repo administrators will test the new service, run it against our [TravisCI](https://travis-ci.org/) tests. If it passes muster, the administrators will push directly to App Engines production servers.  The command to push to App Engine follows.
 
 ```bash

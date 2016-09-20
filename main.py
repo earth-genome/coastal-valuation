@@ -1,7 +1,8 @@
 import sys
-import json
 import urllib
 import finance
+import coastal
+import config
 from google.appengine.api import urlfetch
 
 # Load local libraries
@@ -14,9 +15,9 @@ def discount_value(address, city, state, zipcode):
     Discount the value based on going under water
     """
     # Check zestimate, Earth Genome Developer API key
-    zillow_base = 'http://www.zillow.com/webservice/GetSearchResults.htm'
+    zillow_base = config.urls['zillow_search']
     zillow_payload = {
-        'zws-id': 'X1-ZWz19l1vnzxtzf_ac8os',
+        'zws-id': config.keys['zillow'],
         'address': address.replace(" ", "+"),
         'citystatezip': '+'.join([city, state, zipcode]),
         'zestimate': 'true'
@@ -30,30 +31,8 @@ def discount_value(address, city, state, zipcode):
     lat = float(soup.find('latitude').contents[0])
     valuation = int(soup.find('zestimate').find('amount').contents[0])
 
-    # Spatial query to extract flood zones
-    carto_base = 'https://danhammergenome.cartodb.com/api/v2/sql'
-
-    sql = [
-        'SELECT county ',
-        'FROM ca_coast_yr2000_flood ',
-        'WHERE ST_Intersects(',
-            'the_geom::geography,',
-            'CDB_LatLng(%s, %s)::geography' % (lat, lon),
-        ')'
-    ]
-    sql_payload = {'q': ''.join(sql)}
-
-    carto_url = carto_base + '?' + urllib.urlencode(sql_payload)
-    flood_data = json.loads(urlfetch.fetch(url=carto_url).content)
-    T = 35
-
-    # check if list is empty
-    if not flood_data['rows']:
-        res = False
-        flood_valuation = valuation
-    else:
-        res = True
-        flood_valuation = valuation * finance.discount(T)
+    # Spatial query to extract flood depth
+    depth = coastal.slr_depth(lat, lon)
 
     return {
         'response': {
@@ -61,10 +40,9 @@ def discount_value(address, city, state, zipcode):
                 'lat': lat,
                 'lon': lon
             },
-            'flood': res,
-            'value': finance.moneyfmt(str(flood_valuation), curr='$')
+            'innundation': depth
         },
         'meta': {
-            'reference': finance.moneyfmt(str(valuation), curr='$')
+            'reference': finance.moneyfmt(valuation)
         }
     }
