@@ -3,6 +3,8 @@ import urllib
 import finance
 import coastal
 import config
+import climate
+import numpy as np
 from google.appengine.api import urlfetch
 
 # Load local libraries
@@ -10,9 +12,11 @@ sys.path.insert(0, 'libs')
 from bs4 import BeautifulSoup
 
 
-def discount_value(address, city, state, zipcode):
+def discount_value(address, city, state, zipcode, slr):
     """
-    Discount the value based on going under water
+
+    Discount the value based on going under water, given sea level rise rate.
+
     """
     # Check zestimate, Earth Genome Developer API key
     zillow_base = config.urls['zillow_search']
@@ -33,6 +37,7 @@ def discount_value(address, city, state, zipcode):
 
     # Spatial query to extract flood depth
     depth = coastal.slr_depth(lat, lon)
+    discount_scalar, T = climate.discount(depth, slr)
 
     return {
         'response': {
@@ -40,7 +45,9 @@ def discount_value(address, city, state, zipcode):
                 'lat': lat,
                 'lon': lon
             },
-            'innundation': depth
+            'innundation': depth,
+            'T': np.round(T, 2),
+            'value': finance.moneyfmt(discount_scalar * valuation)
         },
         'meta': {
             'reference': finance.moneyfmt(valuation)

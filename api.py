@@ -15,9 +15,10 @@ class AddressHandler(webapp2.RequestHandler):
         city = self.request.get('city')
         state = self.request.get('state')
         zipcode = self.request.get('zip')
+        slr_rate = float(self.request.get('slr', 3.2))
 
         # response
-        res = discount_value(address, city, state, zipcode)
+        res = discount_value(address, city, state, zipcode, slr=slr_rate)
         self.response.write(json.dumps(res))
 
 
