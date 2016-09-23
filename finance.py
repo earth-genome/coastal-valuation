@@ -1,12 +1,4 @@
-import numpy as np
 from decimal import *
-
-
-def discount(T, rate=0.05):
-    run = np.repeat(1, 1000)
-    buf = np.repeat(0, T)
-    lost = np.append(buf, np.repeat(1, 1000 - T))
-    return 1 - (np.npv(rate, lost) / np.npv(rate, run))
 
 
 def moneyfmt(value):
