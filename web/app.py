@@ -36,20 +36,33 @@ def coastal_valuation(version):
     def _fmt(val):
         return '${:,.2f}'.format(val)
 
-    return json.dumps(
-        {
-            'version': version,
-            'result': {
-                'years': years,
-                'adjusted_valuation': _fmt(discount * house['valuation']),
-                'house': {
-                    'lat': house['lat'],
-                    'lon': house['lon'],
-                    'valuation': _fmt(house['valuation'])
-                }
-            }
+    house_attrs = {
+        'lat': house['lat'],
+        'lon': house['lon'],
+        'valuation': _fmt(house['valuation'])
+    }
+
+    adj_value = _fmt(discount * house['valuation'])
+
+    return json.dumps({
+        'version': version,
+        'result': {
+            'years': years,
+            'adjusted_valuation': adj_value,
+            'house': house_attrs
         }
-    )
+    })
+
+
+@app.route('/<version>/')
+def coastal_docs(version):
+    # Documentation
+    with open('web/docs.json') as docs:
+        data = json.load(docs)
+
+    data['version'] = version
+
+    return json.dumps(data)
 
 
 if __name__ == "__main__":
