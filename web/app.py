@@ -14,7 +14,7 @@ def coastal_valuation(version):
     # Extract parameters
     parser = reqparse.RequestParser()
 
-    parser.add_argument('rate', type=float, help='Rate must be a float.')
+    parser.add_argument('rate', type=float, required=False)
     parser.add_argument('address')
     parser.add_argument('city')
     parser.add_argument('state')
@@ -31,7 +31,14 @@ def coastal_valuation(version):
     )
 
     depth = coastal.slr_depth(house['lat'], house['lon'])
-    discount, years = climate.discount(depth, args['rate'])
+
+    # If there is no rate passed to the query, assume we choose the default
+    # from a joint probability distribution of SLR derived from scientific
+    # surveys
+    if args['rate'] is None:
+        discount, years = climate.joint_prob_discount(depth)
+    else:
+        discount, years = climate.discount(depth, args['rate'])
 
     def _fmt(val):
         return '${:,.2f}'.format(val)
@@ -47,7 +54,6 @@ def coastal_valuation(version):
     return json.dumps({
         'version': version,
         'result': {
-            'years': years,
             'adjusted_valuation': adj_value,
             'house': house_attrs
         }
