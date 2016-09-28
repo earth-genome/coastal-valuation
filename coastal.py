@@ -1,7 +1,5 @@
-import json
-import urllib
 import config
-from google.appengine.api import urlfetch
+import requests
 
 
 def slr_depth(lat, lon):
@@ -38,8 +36,7 @@ def slr_depth(lat, lon):
         'mosaicRule': '{"where":"Name NOT LIKE \'Ov\%\'"}'
     }
 
-    url = url_base + '?' + urllib.urlencode(payload)
-    data = json.loads(urlfetch.fetch(url=url).content)
+    data = requests.get(url_base, params=payload).json()
 
     if data['value'] == 'NoData':
         res = None
