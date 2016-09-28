@@ -2,7 +2,6 @@ import json
 import climate
 import coastal
 import housing
-import locale
 from flask import Flask
 from flask_restful import reqparse
 
@@ -31,16 +30,23 @@ def coastal_valuation(version):
         args['zipcode']
     )
 
-    depth = coastal.slr_depth(32.862305, -79.919835)
+    depth = coastal.slr_depth(house['lat'], house['lon'])
     discount, years = climate.discount(depth, args['rate'])
+
+    def _fmt(val):
+        return '${:,.2f}'.format(val)
 
     return json.dumps(
         {
             'version': version,
             'result': {
                 'years': years,
-                'adjusted_valuation': discount * house['valuation'],
-                'house': house
+                'adjusted_valuation': _fmt(discount * house['valuation']),
+                'house': {
+                    'lat': house['lat'],
+                    'lon': house['lon'],
+                    'valuation': _fmt(house['valuation'])
+                }
             }
         }
     )
