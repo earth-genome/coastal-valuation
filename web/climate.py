@@ -63,7 +63,6 @@ def joint_prob_discount(elev, discount_rate=0.025):
     the joint probability distribution of SLR derived from scientific survey.
 
     """
-
     discount_res = []
     time_res = []
     for [slr, prob] in slr_joint_prob_data():

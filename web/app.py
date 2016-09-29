@@ -12,6 +12,7 @@ app = Flask(__name__)
 def coastal_valuation(version):
 
     # Extract parameters
+
     parser = reqparse.RequestParser()
 
     parser.add_argument('rate', type=float, required=False)
@@ -23,6 +24,7 @@ def coastal_valuation(version):
     args = parser.parse_args()
 
     # Collect results
+
     house = housing.value(
         args['address'],
         args['city'],
@@ -40,7 +42,10 @@ def coastal_valuation(version):
     else:
         discount, years = climate.discount(depth, args['rate'])
 
+    # Format and return results
+
     def _fmt(val):
+        # lightweight, anonymous function to format housing prices as a string
         return '${:,.2f}'.format(val)
 
     house_attrs = {

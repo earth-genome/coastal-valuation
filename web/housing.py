@@ -4,6 +4,12 @@ from bs4 import BeautifulSoup
 
 
 def value(address, city, state, zipcode):
+    """
+
+    Query the Zillow API to get the estimate and geographical coordinates of
+    the supplied address.
+
+    """
     zillow_base = config.urls['zillow_search']
     zillow_payload = {
         'zws-id': config.keys['zillow'],
