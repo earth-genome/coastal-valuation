@@ -16,10 +16,11 @@ def coastal_valuation(version):
     parser = reqparse.RequestParser()
 
     parser.add_argument('rate', type=float, required=False)
-    parser.add_argument('address')
-    parser.add_argument('city')
-    parser.add_argument('state')
-    parser.add_argument('zipcode')
+    parser.add_argument('address', required=True)
+    parser.add_argument('city', required=True)
+    parser.add_argument('state', required=True)
+    parser.add_argument('zipcode', required=True)
+    parser.add_argument('name', required=True)
 
     args = parser.parse_args()
 
