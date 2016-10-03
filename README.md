@@ -13,9 +13,24 @@ Currently **the only working feature is the geocoding service**, since [coastal.
 - Install [Docker Compose](https://docs.docker.com/compose/install).
 
 ### Workflow
+
+Build 
+
 ```bash
 docker-compose build
-docker-compuse up
+docker-machine ip
 ```
+
+You should see the IP address of the docker service, something like `192.168.99.101`.  Then, start the server:
+
+```bash
+docker-compose up
+```
+
+Test the service with the following call:
+
+[http://192.168.99.101:5000/v1/address?address=275 Beresford Creek Street&city=Daniel Island&state=SC&zipcode=29492](http://192.168.99.101:5000/v1/address?address=275%20Beresford%20Creek%20Street&city=Daniel%20Island&state=SC&zipcode=29492)
+
+You may have to swap in the appropriate IP address.
 
 Ensure that you have a JSON viewer browser extension, like [**this one**](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en). When you have developed, submit a pull request.  The repo administrators will test the new service, run it against our CI service tests. If it passes muster, the administrators will push directly to production. The production APIs will evenutally be at `https://api.nature.tech` (??). You will need to request authority to push directly from [danhammer](https://github.com/danhammer).

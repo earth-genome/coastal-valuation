@@ -20,7 +20,6 @@ def coastal_valuation(version):
     parser.add_argument('city', required=True)
     parser.add_argument('state', required=True)
     parser.add_argument('zipcode', required=True)
-    parser.add_argument('name', required=True)
 
     args = parser.parse_args()
 
