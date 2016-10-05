@@ -27,6 +27,8 @@ You should see the IP address of the docker service, something like `192.168.99.
 docker-compose up
 ```
 
+You may need to run `docker-machine start default`. If you still can't connect, and the docker-machine is running, you can configure compose to use the machine with eval `$(docker-machine env default)`
+
 Test the service with the following call:
 
 [http://192.168.99.101:5000/v1/address?address=275 Beresford Creek Street&city=Daniel Island&state=SC&zipcode=29492](http://192.168.99.101:5000/v1/address?address=275%20Beresford%20Creek%20Street&city=Daniel%20Island&state=SC&zipcode=29492)
