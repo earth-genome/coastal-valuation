@@ -11,6 +11,7 @@ Currently **the only working feature is the geocoding service**, since [coastal.
 ### Prerequisites
 
 - Install [Docker Compose](https://docs.docker.com/compose/install).
+- Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads).
 
 ### Workflow
 
@@ -18,6 +19,7 @@ Build
 
 ```bash
 docker-compose build
+docker-machine create --driver virtualbox default
 docker-machine ip
 ```
 
