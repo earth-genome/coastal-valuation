@@ -20,15 +20,10 @@ Build
 ```bash
 docker-compose build
 docker-machine create --driver virtualbox default
-```
-
-You should see the IP address of the docker service, something like `192.168.99.101`.  Then, start the server:
-
-```bash
 docker-compose up
 ```
 
-You should see the following text:
+The following text should follow:
 
 ```
 Creating network "coastalvaluation_default" with the default driver
