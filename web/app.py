@@ -13,7 +13,7 @@ def coastal_valuation(version):
 
     # Extract parameters
 
-    parser = reqparse.RequestParser()
+    parser = reqparse.RequestParser(bundle_errors=True)
 
     parser.add_argument('rate', type=float, required=False)
     parser.add_argument('address', required=True)
