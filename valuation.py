@@ -1,48 +1,37 @@
 import json
-import climate
-import coastal
-import housing
-from flask import Flask
-from flask_restful import reqparse
+from coastal_valuation import climate
+from coastal_valuation import coastal
+from coastal_valuation import housing
 
-app = Flask(__name__)
+def valueAddress(address, city, state, zipcode):
+    """
 
+    Accepts an address of a U.S. property and returns the risk adjusted value,
+    accounting for sea level rise.  
 
-@app.route('/<version>/address')
-def coastal_valuation(version):
+    Example:
 
-    # Extract parameters
+    valueAddress("275 Beresford Creek Street", "Daniel Island", "SC","29492")
+    
+    {
+        'adjusted_valuation': '$772,366.26', 
+        'house': {
+            'lat': 32.862305, 
+            'valuation': '$788,037.00', 
+            'lon': -79.919835
+        }
+    }
 
-    parser = reqparse.RequestParser(bundle_errors=True)
+    """
 
-    parser.add_argument('rate', type=float, required=False)
-    parser.add_argument('address', required=True)
-    parser.add_argument('city', required=True)
-    parser.add_argument('state', required=True)
-    parser.add_argument('zipcode', required=True)
-
-    args = parser.parse_args()
-
-    # Collect results
-
-    house = housing.value(
-        args['address'],
-        args['city'],
-        args['state'],
-        args['zipcode']
-    )
-
+    house = housing.value(address, city, state, zipcode)
     depth = coastal.slr_depth(house['lat'], house['lon'])
 
     # If there is no rate passed to the query, assume we choose the default
     # from a joint probability distribution of SLR derived from scientific
     # surveys
-    if args['rate'] is None:
-        discount, years = climate.joint_prob_discount(depth)
-    else:
-        discount, years = climate.discount(depth, args['rate'])
 
-    # Format and return results
+    discount, years = climate.joint_prob_discount(depth)
 
     def _fmt(val):
         # lightweight, anonymous function to format housing prices as a string
@@ -56,25 +45,7 @@ def coastal_valuation(version):
 
     adj_value = _fmt(discount * house['valuation'])
 
-    return json.dumps({
-        'version': version,
-        'result': {
-            'adjusted_valuation': adj_value,
-            'house': house_attrs
-        }
-    })
-
-
-@app.route('/<version>/')
-def coastal_docs(version):
-    # Documentation
-    with open('web/docs.json') as docs:
-        data = json.load(docs)
-
-    data['version'] = version
-
-    return json.dumps(data)
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    return {
+        'adjusted_valuation': adj_value,
+        'house': house_attrs
+    }

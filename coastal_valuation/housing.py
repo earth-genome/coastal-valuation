@@ -13,7 +13,7 @@ def value(address, city, state, zipcode):
     zillow_base = config.urls['zillow_search']
     zillow_payload = {
         'zws-id': config.keys['zillow'],
-        'address': address.replace(" ", "+"),
+        'address': address
         'citystatezip': '+'.join([city, state, zipcode]),
         'zestimate': 'true'
     }

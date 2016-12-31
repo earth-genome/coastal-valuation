@@ -48,7 +48,8 @@ def discount(elev, slr, discount_rate=0.025):
 
     """
     # feet to centimeters with cm/year rise estimate. TODO: This is a rough,
-    # terrible estimate and should be replaced to reflect actual science.
+    # terrible estimate and should be replaced to reflect actual science
+    # (i.e., not the bathtub model)
     T = ((6 - elev) / 0.0328084) / slr
     run = np.repeat(1, 1000)
     buf = np.repeat(0, T)
